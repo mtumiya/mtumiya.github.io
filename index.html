@@ -43,17 +43,11 @@
     </style>
 </head>
 <body class="bg-pink-50 min-h-screen py-8 px-4">
-    <!-- Music Player -->
+    <!-- Simple Music Player -->
     <div class="fixed top-4 right-4 z-50">
-        <iframe src="https://archive.org/embed/clinton.kane.i.guess.im.in.love" 
-                width="300" 
-                height="40" 
-                frameborder="0" 
-                class="rounded-lg shadow-lg bg-white"
-                webkitallowfullscreen="true" 
-                mozallowfullscreen="true" 
-                allowfullscreen>
-        </iframe>
+        <audio id="bgMusic" controls class="rounded-lg shadow-lg">
+            <source src="https://ia800503.us.archive.org/19/items/clinton.kane.i.guess.im.in.love/clinton.kane.i.guess.i_m.in.love.mp3" type="audio/mpeg">
+        </audio>
     </div>
 
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6">
