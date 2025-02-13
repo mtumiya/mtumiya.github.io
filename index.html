@@ -43,12 +43,16 @@
     </style>
 </head>
 <body class="bg-pink-50 min-h-screen py-8 px-4">
-    <audio id="bgMusic" preload="auto">
+    <!-- Audio with multiple formats and fallbacks -->
+    <audio id="bgMusic" preload="auto" controlsList="nodownload">
         <source src="https://dl.dropboxusercontent.com/scl/fi/6nm0ey5rfkrck128ra36e/clinton.kane.i.guess.i-m.in.love.m4a" type="audio/m4a">
+        <source src="https://dl.dropboxusercontent.com/scl/fi/6nm0ey5rfkrck128ra36e/clinton.kane.i.guess.i-m.in.love.m4a" type="audio/mp4">
+        Your browser does not support the audio element.
     </audio>
     
-    <button id="muteButton" class="fixed top-4 right-4 bg-white p-3 rounded-full shadow-lg z-50">
-        🔊 Play Music
+    <button id="muteButton" class="fixed top-4 right-4 bg-white p-3 rounded-full shadow-lg z-50 flex items-center gap-2">
+        <span id="audioIcon">🔊</span>
+        <span id="audioText">Play Music</span>
     </button>
 
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6">
@@ -136,28 +140,58 @@
         // Auto advance slideshow
         setInterval(() => changeSlide(1), 5000);
 
-        // Music controls
+        // Enhanced audio controls
         const audio = document.getElementById("bgMusic");
         const muteButton = document.getElementById("muteButton");
+        const audioIcon = document.getElementById("audioIcon");
+        const audioText = document.getElementById("audioText");
         let isPlaying = false;
 
+        // Function to load and play audio
+        async function playAudio() {
+            try {
+                await audio.play();
+                audioIcon.textContent = "🔊";
+                audioText.textContent = "Pause Music";
+                isPlaying = true;
+            } catch (error) {
+                console.error("Audio playback failed:", error);
+                audioIcon.textContent = "❌";
+                audioText.textContent = "Playback failed";
+            }
+        }
+
+        // Function to pause audio
+        function pauseAudio() {
+            audio.pause();
+            audioIcon.textContent = "🔈";
+            audioText.textContent = "Play Music";
+            isPlaying = false;
+        }
+
+        // Audio button click handler
         muteButton.addEventListener("click", () => {
             if (isPlaying) {
-                audio.pause();
-                muteButton.innerHTML = "🔈 Play Music";
-                isPlaying = false;
+                pauseAudio();
             } else {
-                audio.src = "https://drive.google.com/uc?export=view&id=1A4U4fc0sOxNUon7ZNZ1806Vbk5EER5Ze";
-                audio.play()
-                    .then(() => {
-                        muteButton.innerHTML = "🔊 Pause Music";
-                        isPlaying = true;
-                    })
-                    .catch(error => {
-                        console.log("Playback failed:", error);
-                        muteButton.innerHTML = "❌ Playback failed";
-                    });
+                playAudio();
             }
+        });
+
+        // Handle audio loading errors
+        audio.addEventListener('error', (e) => {
+            console.error("Audio error:", e);
+            audioIcon.textContent = "❌";
+            audioText.textContent = "Audio failed to load";
+        });
+
+        // Handle audio successful loading
+        audio.addEventListener('canplaythrough', () => {
+            if (!isPlaying) {
+                audioIcon.textContent = "🔈";
+                audioText.textContent = "Play Music";
+            }
+        });
         });
 
         // Secret message
