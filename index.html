@@ -43,17 +43,15 @@
     </style>
 </head>
 <body class="bg-pink-50 min-h-screen py-8 px-4">
-    <!-- Music Player -->
+    <!-- Simple Music Player -->
     <div class="fixed top-4 right-4 z-50">
-        <iframe src="https://archive.org/embed/clinton.kane.i.guess.im.in.love" 
-                width="300" 
-                height="40" 
-                frameborder="0" 
-                class="rounded-lg shadow-lg bg-white"
-                webkitallowfullscreen="true" 
-                mozallowfullscreen="true" 
-                allowfullscreen>
-        </iframe>
+        <audio id="bgMusic" preload="auto" controlsList="nodownload">
+            <source src="https://dl.dropboxusercontent.com/scl/fi/6nm0ey5rfkrck128ra36e/clinton.kane.i.guess.i-m.in.love.m4a?dl=1" type="audio/m4a">
+        </audio>
+        <button id="muteButton" class="bg-white p-3 rounded-full shadow-lg flex items-center gap-2 hover:bg-gray-100 transition-all">
+            <span id="audioIcon">🔊</span>
+            <span id="audioText" class="text-sm">Play Music</span>
+        </button>
     </div>
 
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6">
@@ -140,6 +138,33 @@
 
         // Auto advance slideshow
         setInterval(() => changeSlide(1), 5000);
+
+        // Audio Controls
+        const audio = document.getElementById("bgMusic");
+        const muteButton = document.getElementById("muteButton");
+        const audioIcon = document.getElementById("audioIcon");
+        const audioText = document.getElementById("audioText");
+        let isPlaying = false;
+
+        muteButton.addEventListener("click", async () => {
+            try {
+                if (isPlaying) {
+                    audio.pause();
+                    audioIcon.textContent = "🔊";
+                    audioText.textContent = "Play Music";
+                    isPlaying = false;
+                } else {
+                    await audio.play();
+                    audioIcon.textContent = "🔈";
+                    audioText.textContent = "Pause Music";
+                    isPlaying = true;
+                }
+            } catch (error) {
+                console.error("Audio playback failed:", error);
+                audioIcon.textContent = "❌";
+                audioText.textContent = "Try again";
+            }
+        });
 
         // Secret message
         function toggleSecret() {
