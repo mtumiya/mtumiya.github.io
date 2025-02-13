@@ -43,19 +43,14 @@
     </style>
 </head>
 <body class="bg-pink-50 min-h-screen py-8 px-4">
-    <!-- Audio with multiple formats and fallbacks -->
+    <!-- Audio with modified Dropbox URL -->
     <audio id="bgMusic" preload="auto" controlsList="nodownload">
-        <source src="https://dl.dropboxusercontent.com/scl/fi/6nm0ey5rfkrck128ra36e/clinton.kane.i.guess.i-m.in.love.m4a?dl=1" type="audio/m4a">
-        <source src="https://dl.dropboxusercontent.com/scl/fi/6nm0ey5rfkrck128ra36e/clinton.kane.i.guess.i-m.in.love.m4a?raw=1" type="audio/mp4">
-        Your browser does not support the audio element.
+        <source src="https://www.dropbox.com/scl/fi/6nm0ey5rfkrck128ra36e/clinton.kane.i.guess.i-m.in.love.m4a?raw=1" type="audio/m4a">
     </audio>
     
-    <!-- Added debug display -->
-    <div id="debugInfo" class="fixed top-16 right-4 bg-white p-2 rounded shadow text-sm"></div>
-    
-    <button id="muteButton" class="fixed top-4 right-4 bg-white p-3 rounded-full shadow-lg z-50 flex items-center gap-2">
+    <button id="muteButton" class="fixed top-4 right-4 bg-white p-3 rounded-full shadow-lg z-50 flex items-center gap-2 hover:bg-gray-100">
         <span id="audioIcon">🔊</span>
-        <span id="audioText">Play Music</span>
+        <span id="audioText" class="text-sm">Play Music</span>
     </button>
 
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6">
@@ -143,90 +138,38 @@
         // Auto advance slideshow
         setInterval(() => changeSlide(1), 5000);
 
-        // Enhanced audio controls with debug
+        // Simplified audio controls
         const audio = document.getElementById("bgMusic");
         const muteButton = document.getElementById("muteButton");
         const audioIcon = document.getElementById("audioIcon");
         const audioText = document.getElementById("audioText");
-        const debugInfo = document.getElementById("debugInfo");
         let isPlaying = false;
 
-        function updateDebug(message) {
-            debugInfo.textContent = message;
-            console.log(message);
-        }
-
-        // Function to load and play audio
-        async function playAudio() {
+        // Audio button click handler
+        muteButton.addEventListener("click", async () => {
             try {
-                updateDebug("Attempting to play...");
-                await audio.load(); // Reload the audio
-                updateDebug("Audio loaded, trying to play...");
-                await audio.play();
-                audioIcon.textContent = "🔊";
-                audioText.textContent = "Pause Music";
-                isPlaying = true;
-                updateDebug("Playing successfully!");
+                if (isPlaying) {
+                    audio.pause();
+                    audioIcon.textContent = "🔊";
+                    audioText.textContent = "Play Music";
+                    isPlaying = false;
+                } else {
+                    await audio.play();
+                    audioIcon.textContent = "🔈";
+                    audioText.textContent = "Pause Music";
+                    isPlaying = true;
+                }
             } catch (error) {
                 console.error("Audio playback failed:", error);
-                updateDebug("Error: " + error.message);
                 audioIcon.textContent = "❌";
-                audioText.textContent = "Playback failed";
-            }
-        }
-
-        // Function to pause audio
-        function pauseAudio() {
-            audio.pause();
-            audioIcon.textContent = "🔈";
-            audioText.textContent = "Play Music";
-            isPlaying = false;
-            updateDebug("Audio paused");
-        }
-
-        // Audio button click handler
-        muteButton.addEventListener("click", () => {
-            if (isPlaying) {
-                pauseAudio();
-            } else {
-                playAudio();
+                audioText.textContent = "Try again";
             }
         });
 
-        // Handle audio loading errors
-        audio.addEventListener('error', (e) => {
-            const error = e.target.error;
-            console.error("Audio error:", error);
-            let errorMessage = "Audio failed to load: ";
-            switch (error.code) {
-                case error.MEDIA_ERR_ABORTED:
-                    errorMessage += "Loading aborted";
-                    break;
-                case error.MEDIA_ERR_NETWORK:
-                    errorMessage += "Network error";
-                    break;
-                case error.MEDIA_ERR_DECODE:
-                    errorMessage += "Decoding error";
-                    break;
-                case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                    errorMessage += "Format not supported";
-                    break;
-                default:
-                    errorMessage += "Unknown error";
-            }
-            updateDebug(errorMessage);
-            audioIcon.textContent = "❌";
-            audioText.textContent = "Audio failed";
-        });
-
-        // Handle audio successful loading
-        audio.addEventListener('canplaythrough', () => {
-            updateDebug("Audio ready to play");
-            if (!isPlaying) {
-                audioIcon.textContent = "🔈";
-                audioText.textContent = "Play Music";
-            }
-        });
+        // Handle audio loading
+        audio.addEventListener('canplay', () => {
+            muteButton.style.opacity = "1";
+            muteButton.style.pointerEvents = "auto";
         });
 
         // Secret message
