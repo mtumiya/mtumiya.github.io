@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Momo ??</title>
+    <title>For Momo ❤️</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .animate-pulse {
@@ -43,12 +43,12 @@
     </style>
 </head>
 <body class="bg-pink-50 min-h-screen py-8 px-4">
-    <audio id="bgMusic" loop>
-        <source src="https://docs.google.com/uc?export=download&id=1A4U4fc0sOxNUon7ZNZ1806Vbk5EER5Ze" type="audio/mpeg">
+    <audio id="bgMusic" preload="auto">
+        <source src="https://drive.google.com/uc?export=view&id=1A4U4fc0sOxNUon7ZNZ1806Vbk5EER5Ze" type="audio/mpeg">
     </audio>
     
     <button id="muteButton" class="fixed top-4 right-4 bg-white p-3 rounded-full shadow-lg z-50">
-        ??
+        🔊 Play Music
     </button>
 
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6">
@@ -56,7 +56,7 @@
             <h1 class="text-5xl font-bold text-pink-600 mb-2">Momo</h1>
             <p class="text-lg text-gray-600 mb-4">~ Mulobela ~</p>
             <h2 class="text-3xl font-bold text-gray-800 mb-4">My Valentine</h2>
-            <div class="heart animate-pulse">??</div>
+            <div class="heart animate-pulse">❤️</div>
         </div>
 
         <div class="slide-container mb-8">
@@ -66,8 +66,8 @@
             <img class="slide" src="https://drive.google.com/uc?export=view&id=19fRWekaAKjsNCRfAhd9HNKA--x2TIcna" alt="Moment 4">
             <img class="slide" src="https://drive.google.com/uc?export=view&id=1ydk601lF79Lu52GNIj3KH_z0e6HU0PCv" alt="Moment 5">
             <img class="slide" src="https://drive.google.com/uc?export=view&id=1urs-xTspnPosPnj1WPZq9di2Ss5_vhtC" alt="Moment 6">
-            <button onclick="changeSlide(-1)" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white">?</button>
-            <button onclick="changeSlide(1)" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white">?</button>
+            <button onclick="changeSlide(-1)" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white">⬅️</button>
+            <button onclick="changeSlide(1)" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white">➡️</button>
         </div>
 
         <div class="mb-8 p-6 bg-pink-50 rounded-lg">
@@ -103,11 +103,11 @@
 
         <div class="text-center">
             <button onclick="toggleSecret()" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-full inline-flex items-center gap-2 transition-all">
-                ?? Special Surprise
+                🎁 Special Surprise
             </button>
             <div id="secretMessage" class="hidden mt-4 p-4 bg-pink-100 rounded-lg">
                 <p class="text-gray-800">
-                    You're not just my Valentine - you're my everything. I love you more with each passing day. ??
+                    You're not just my Valentine - you're my everything. I love you more with each passing day. ❤️
                 </p>
             </div>
         </div>
@@ -138,18 +138,26 @@
         // Music controls
         const audio = document.getElementById("bgMusic");
         const muteButton = document.getElementById("muteButton");
-        let isMuted = false;
+        let isPlaying = false;
 
         muteButton.addEventListener("click", () => {
-            isMuted = !isMuted;
-            audio.muted = isMuted;
-            muteButton.textContent = isMuted ? "??" : "??";
+            if (isPlaying) {
+                audio.pause();
+                muteButton.innerHTML = "🔈 Play Music";
+                isPlaying = false;
+            } else {
+                audio.src = "https://drive.google.com/uc?export=view&id=1A4U4fc0sOxNUon7ZNZ1806Vbk5EER5Ze";
+                audio.play()
+                    .then(() => {
+                        muteButton.innerHTML = "🔊 Pause Music";
+                        isPlaying = true;
+                    })
+                    .catch(error => {
+                        console.log("Playback failed:", error);
+                        muteButton.innerHTML = "❌ Playback failed";
+                    });
+            }
         });
-
-        // Start playing music when user interacts with the page
-        document.addEventListener("click", () => {
-            audio.play();
-        }, { once: true });
 
         // Secret message
         function toggleSecret() {
